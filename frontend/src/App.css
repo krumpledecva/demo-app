@@ -2,7 +2,7 @@
 
 body {
   font-family: system-ui, sans-serif;
-  background: #f0f4f8;
+  background: #f0fdfb;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -11,14 +11,14 @@ body {
 
 .app {
   width: 100%;
-  max-width: 860px;
+  max-width: 900px;
 }
 
 h1 {
   text-align: center;
   font-size: 2rem;
   margin-bottom: 2rem;
-  color: #1a202c;
+  color: #00BFA5;
 }
 
 .panels {
@@ -27,7 +27,7 @@ h1 {
   gap: 1.5rem;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 650px) {
   .panels { grid-template-columns: 1fr; }
 }
 
@@ -35,27 +35,33 @@ h1 {
   background: white;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0,191,165,0.10);
+  border: 1px solid #b2dfdb;
 }
 
 .card h2 {
   font-size: 1.25rem;
   margin-bottom: 1rem;
-  color: #2d3748;
+  color: #00BFA5;
 }
 
 input[type="text"] {
   width: 100%;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #cbd5e0;
+  border: 1.5px solid #80CBC4;
   border-radius: 8px;
   font-size: 1rem;
   margin-bottom: 0.75rem;
+  color: #134E4A;
+  outline: none;
+  transition: border-color 0.2s;
 }
+
+input[type="text"]:focus { border-color: #00BFA5; }
 
 button {
   padding: 0.5rem 1.25rem;
-  background: #4299e1;
+  background: #00BFA5;
   color: white;
   border: none;
   border-radius: 8px;
@@ -64,15 +70,17 @@ button {
   transition: background 0.2s;
 }
 
-button:hover { background: #2b6cb0; }
-button:disabled { background: #a0aec0; cursor: not-allowed; }
+button:hover  { background: #00A693; }
+button:disabled { background: #b2dfdb; cursor: not-allowed; }
 
 .result {
   margin-top: 1rem;
   padding: 0.75rem;
-  background: #ebf8ff;
+  background: #e0f7f4;
+  border-left: 3px solid #00BFA5;
   border-radius: 8px;
-  color: #2c5282;
+  color: #134E4A;
+  line-height: 1.6;
 }
 
 .error {
@@ -81,6 +89,16 @@ button:disabled { background: #a0aec0; cursor: not-allowed; }
   background: #fff5f5;
   border-radius: 8px;
   color: #c53030;
+}
+
+/* ── Map ─────────────────────────────────────────────────────────── */
+.weather-map {
+  margin-top: 0.75rem;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #80CBC4;
+  height: 180px;
+  width: 100%;
 }
 
 /* ── Dice row ─────────────────────────────────────────────────────── */
@@ -95,7 +113,7 @@ button:disabled { background: #a0aec0; cursor: not-allowed; }
   text-align: center;
   font-size: 1.1rem;
   font-weight: 600;
-  color: #2d3748;
+  color: #00BFA5;
   margin-bottom: 0.75rem;
 }
 
@@ -114,14 +132,13 @@ button:disabled { background: #a0aec0; cursor: not-allowed; }
   transition: transform 0.22s ease-in-out;
 }
 
-/* Six faces — translateZ = half the cube size */
 .die3d-face {
   position: absolute;
   width: 62px;
   height: 62px;
   border: 1.5px solid #b0b8c8;
   border-radius: 10px;
-  background: linear-gradient(145deg, #ffffff 55%, #f0f4f8 100%);
+  background: linear-gradient(145deg, #ffffff 55%, #f0fdfb 100%);
   box-shadow:
     inset 0 0 4px rgba(0,0,0,0.06),
     0 3px 8px rgba(0,0,0,0.18);
@@ -137,7 +154,6 @@ button:disabled { background: #a0aec0; cursor: not-allowed; }
 .die3d-face--top    { transform: rotateX(90deg)   translateZ(31px); }
 .die3d-face--bottom { transform: rotateX(-90deg)  translateZ(31px); }
 
-/* Pip grid: 3 × 3 */
 .die-face-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

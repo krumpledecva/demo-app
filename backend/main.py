@@ -88,6 +88,8 @@ async def get_weather(city: str):
     temp_c = round(cur["temperature_2m"])
     return {
         "city": city_label,
+        "lat": lat,
+        "lon": lon,
         "temp_c": temp_c,
         "temp_f": round(temp_c * 9 / 5 + 32),
         "feels_like_c": round(cur["apparent_temperature"]),

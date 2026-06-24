@@ -25,6 +25,10 @@ export default function Weather() {
     }
   }
 
+  const mapSrc = data
+    ? `https://www.openstreetmap.org/export/embed.html?bbox=${data.lon - 0.4},${data.lat - 0.4},${data.lon + 0.4},${data.lat + 0.4}&layer=mapnik&marker=${data.lat},${data.lon}`
+    : null;
+
   return (
     <div className="card">
       <h2>🌤 Weather</h2>
@@ -42,13 +46,21 @@ export default function Weather() {
       {error && <div className="error">⚠ {error}</div>}
 
       {data && (
-        <div className="result">
-          <strong>{data.city}</strong><br />
-          🌡 {data.temp_c}°C / {data.temp_f}°F<br />
-          Feels like {data.feels_like_c}°C<br />
-          💧 Humidity {data.humidity}%<br />
-          {data.description}
-        </div>
+        <>
+          <div className="result">
+            <strong>{data.city}</strong><br />
+            🌡 {data.temp_c}°C / {data.temp_f}°F<br />
+            Feels like {data.feels_like_c}°C<br />
+            💧 Humidity {data.humidity}%<br />
+            {data.description}
+          </div>
+          <iframe
+            className="weather-map"
+            title="City map"
+            src={mapSrc}
+            loading="lazy"
+          />
+        </>
       )}
     </div>
   );

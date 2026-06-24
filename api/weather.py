@@ -52,6 +52,8 @@ class handler(BaseHTTPRequestHandler):
                 temp_c = round(cur["temperature_2m"])
                 self._respond(200, {
                     "city": f"{loc['name']}, {loc.get('country', '')}",
+                    "lat": loc["latitude"],
+                    "lon": loc["longitude"],
                     "temp_c": temp_c,
                     "temp_f": round(temp_c * 9 / 5 + 32),
                     "feels_like_c": round(cur["apparent_temperature"]),

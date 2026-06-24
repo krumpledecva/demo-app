@@ -6,6 +6,33 @@ import urllib.parse
 import streamlit as st
 
 st.set_page_config(page_title="Demo App", page_icon="🎲", layout="centered")
+
+# ── Mint green theme ───────────────────────────────────────────────────────────
+st.markdown("""
+<style>
+    .stApp { background-color: #f0fdfb; }
+    h1 { color: #00BFA5 !important; }
+    h2, h3 { color: #00BFA5 !important; }
+    .stButton > button {
+        background-color: #00BFA5 !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 8px !important;
+    }
+    .stButton > button:hover { background-color: #00A693 !important; }
+    .stTextInput > div > div > input {
+        border: 1.5px solid #80CBC4 !important;
+        border-radius: 8px !important;
+        color: #134E4A !important;
+    }
+    .stTextInput > div > div > input:focus { border-color: #00BFA5 !important; }
+    .stSuccess { border-left-color: #00BFA5 !important; background-color: #e0f7f4 !important; }
+    .stInfo { border-left-color: #00BFA5 !important; }
+    [data-testid="stHeader"] { background: transparent; }
+    hr { border-color: #b2dfdb !important; }
+</style>
+""", unsafe_allow_html=True)
+
 st.title("Demo App")
 
 WMO_CODES = {
@@ -87,6 +114,15 @@ if st.button("Get temperature"):
                         f"💧 Humidity {cur['relative_humidity_2m']}%  \n"
                         f"{desc}"
                     )
+
+                    # OpenStreetMap embed
+                    map_url = (
+                        f"https://www.openstreetmap.org/export/embed.html"
+                        f"?bbox={lon-0.4},{lat-0.4},{lon+0.4},{lat+0.4}"
+                        f"&layer=mapnik&marker={lat},{lon}"
+                    )
+                    st.components.v1.iframe(map_url, height=220)
+
             except Exception as e:
                 st.error(f"Could not fetch weather: {e}")
 
