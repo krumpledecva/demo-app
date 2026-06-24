@@ -1,6 +1,8 @@
 import random
 import time
-import httpx
+import json
+import urllib.request
+import urllib.parse
 import streamlit as st
 
 st.set_page_config(page_title="Demo App", page_icon="🎲", layout="centered")
@@ -33,6 +35,12 @@ WMO_CODES = {
     99: "Thunderstorm with heavy hail ⛈",
 }
 
+
+def fetch_json(url):
+    with urllib.request.urlopen(url, timeout=10) as r:
+        return json.loads(r.read().decode())
+
+
 # ── Weather ────────────────────────────────────────────────────────────────────
 st.header("🌤 Weather")
 city = st.text_input("Enter a city name", placeholder="e.g. Ljubljana")
@@ -43,48 +51,44 @@ if st.button("Get temperature"):
     else:
         with st.spinner("Fetching weather…"):
             try:
-                with httpx.Client(timeout=10) as client:
-                    geo = client.get(
-                        "https://geocoding-api.open-meteo.com/v1/search",
-                        params={"name": city.strip(), "count": 1,
-                                "language": "en", "format": "json"},
+                geo_url = (
+                    "https://geocoding-api.open-meteo.com/v1/search?"
+                    + urllib.parse.urlencode({"name": city.strip(), "count": 1,
+                                              "language": "en", "format": "json"})
+                )
+                geo = fetch_json(geo_url)
+                results = geo.get("results")
+                if not results:
+                    st.error(f"City '{city}' not found.")
+                else:
+                    loc = results[0]
+                    lat, lon = loc["latitude"], loc["longitude"]
+                    city_label = f"{loc['name']}, {loc.get('country', '')}"
+
+                    w_url = (
+                        "https://api.open-meteo.com/v1/forecast?"
+                        + urllib.parse.urlencode({
+                            "latitude": lat,
+                            "longitude": lon,
+                            "current": "temperature_2m,apparent_temperature,relative_humidity_2m,weather_code",
+                            "temperature_unit": "celsius",
+                        })
                     )
-                    geo.raise_for_status()
-                    results = geo.json().get("results")
-                    if not results:
-                        st.error(f"City '{city}' not found.")
-                    else:
-                        loc = results[0]
-                        lat, lon = loc["latitude"], loc["longitude"]
-                        city_label = f"{loc['name']}, {loc.get('country', '')}"
+                    w = fetch_json(w_url)
+                    cur = w["current"]
+                    temp_c = round(cur["temperature_2m"])
+                    temp_f = round(temp_c * 9 / 5 + 32)
+                    desc = WMO_CODES.get(cur["weather_code"], "Unknown")
 
-                        w = client.get(
-                            "https://api.open-meteo.com/v1/forecast",
-                            params={
-                                "latitude": lat,
-                                "longitude": lon,
-                                "current": (
-                                    "temperature_2m,apparent_temperature,"
-                                    "relative_humidity_2m,weather_code"
-                                ),
-                                "temperature_unit": "celsius",
-                            },
-                        )
-                        w.raise_for_status()
-                        cur = w.json()["current"]
-                        temp_c = round(cur["temperature_2m"])
-                        temp_f = round(temp_c * 9 / 5 + 32)
-                        desc = WMO_CODES.get(cur["weather_code"], "Unknown")
-
-                        st.success(
-                            f"**{city_label}**  \n"
-                            f"🌡 {temp_c}°C / {temp_f}°F  \n"
-                            f"Feels like {round(cur['apparent_temperature'])}°C  \n"
-                            f"💧 Humidity {cur['relative_humidity_2m']}%  \n"
-                            f"{desc}"
-                        )
-            except httpx.RequestError:
-                st.error("Weather service unavailable. Try again later.")
+                    st.success(
+                        f"**{city_label}**  \n"
+                        f"🌡 {temp_c}°C / {temp_f}°F  \n"
+                        f"Feels like {round(cur['apparent_temperature'])}°C  \n"
+                        f"💧 Humidity {cur['relative_humidity_2m']}%  \n"
+                        f"{desc}"
+                    )
+            except Exception as e:
+                st.error(f"Could not fetch weather: {e}")
 
 st.divider()
 
@@ -99,11 +103,11 @@ if "die1" not in st.session_state:
 
 col1, col2 = st.columns(2)
 with col1:
-    face1 = FACES[st.session_state.die1] if st.session_state.die1 else "⬜"
+    face1 = FACES[st.session_state.die1] if st.session_state.die1 else "🎲"
     st.markdown(f"<div style='font-size:4rem;text-align:center'>{face1}</div>",
                 unsafe_allow_html=True)
 with col2:
-    face2 = FACES[st.session_state.die2] if st.session_state.die2 else "⬜"
+    face2 = FACES[st.session_state.die2] if st.session_state.die2 else "🎲"
     st.markdown(f"<div style='font-size:4rem;text-align:center'>{face2}</div>",
                 unsafe_allow_html=True)
 
