@@ -27,3 +27,5 @@ Thumbs.db
 # R
 .Rhistory
 .RData
+
+.vercel
