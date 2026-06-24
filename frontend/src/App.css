@@ -1,0 +1,162 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, sans-serif;
+  background: #f0f4f8;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.app {
+  width: 100%;
+  max-width: 860px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #1a202c;
+}
+
+.panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 600px) {
+  .panels { grid-template-columns: 1fr; }
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #2d3748;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #cbd5e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+button {
+  padding: 0.5rem 1.25rem;
+  background: #4299e1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover { background: #2b6cb0; }
+button:disabled { background: #a0aec0; cursor: not-allowed; }
+
+.result {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: #ebf8ff;
+  border-radius: 8px;
+  color: #2c5282;
+}
+
+.error {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: #fff5f5;
+  border-radius: 8px;
+  color: #c53030;
+}
+
+/* ── Dice row ─────────────────────────────────────────────────────── */
+.dice-row {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  margin: 1.25rem 0 1rem;
+}
+
+.dice-total {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 0.75rem;
+}
+
+/* ── 3-D Die ──────────────────────────────────────────────────────── */
+.die3d-scene {
+  perspective: 240px;
+  width: 62px;
+  height: 62px;
+}
+
+.die3d-cube {
+  width: 62px;
+  height: 62px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.22s ease-in-out;
+}
+
+/* Six faces — translateZ = half the cube size */
+.die3d-face {
+  position: absolute;
+  width: 62px;
+  height: 62px;
+  border: 1.5px solid #b0b8c8;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #ffffff 55%, #f0f4f8 100%);
+  box-shadow:
+    inset 0 0 4px rgba(0,0,0,0.06),
+    0 3px 8px rgba(0,0,0,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.die3d-face--front  { transform: rotateY(0deg)    translateZ(31px); }
+.die3d-face--back   { transform: rotateY(180deg)  translateZ(31px); }
+.die3d-face--right  { transform: rotateY(90deg)   translateZ(31px); }
+.die3d-face--left   { transform: rotateY(-90deg)  translateZ(31px); }
+.die3d-face--top    { transform: rotateX(90deg)   translateZ(31px); }
+.die3d-face--bottom { transform: rotateX(-90deg)  translateZ(31px); }
+
+/* Pip grid: 3 × 3 */
+.die-face-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  padding: 7px;
+  width: 100%;
+  height: 100%;
+}
+
+.die-pip {
+  border-radius: 50%;
+  align-self: center;
+  justify-self: center;
+  width: 9px;
+  height: 9px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+}
+
+.die-pip--empty {
+  background: transparent !important;
+  box-shadow: none;
+}

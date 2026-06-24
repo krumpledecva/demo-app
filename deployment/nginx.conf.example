@@ -1,0 +1,23 @@
+# Example Nginx config for VPS deployment.
+# Place this in /etc/nginx/sites-available/demo-app and symlink to sites-enabled/.
+
+server {
+    listen 80;
+    server_name your-domain.com;
+
+    # Serve the React build
+    root /var/www/demo-app/frontend/dist;
+    index index.html;
+
+    # SPA fallback
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Proxy API requests to FastAPI (running on port 8000)
+    location /api/ {
+        proxy_pass         http://127.0.0.1:8000/api/;
+        proxy_set_header   Host $host;
+        proxy_set_header   X-Real-IP $remote_addr;
+    }
+}
